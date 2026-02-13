@@ -135,64 +135,8 @@
 			<option value="both" selected>Names and Images</option>
 		</select>
 
-		<div class="dropdown" id="generations">
-			<button type="button" data-plural-name="Generations" data-allow-none="true">All Generations</button>
-			<div class="popup">
-				<ul>
-					<li><label><input type="checkbox" value="all" data-select-all="true" checked>Select All</label></li>
-					<li><label><input type="checkbox" name="generations" value="1" checked>Gen 1</label></li>
-					<li><label><input type="checkbox" name="generations" value="2" checked>Gen 2</label></li>
-					<li><label><input type="checkbox" name="generations" value="3" checked>Gen 3</label></li>
-					<li><label><input type="checkbox" name="generations" value="4" checked>Gen 4</label></li>
-					<li><label><input type="checkbox" name="generations" value="5" checked>Gen 5</label></li>
-					<li><label><input type="checkbox" name="generations" value="6" checked>Gen 6</label></li>
-					<li><label><input type="checkbox" name="generations" value="7" checked>Gen 7</label></li>
-					<li><label><input type="checkbox" name="generations" value="8" checked>Gen 8</label></li>
-					<li><label><input type="checkbox" name="generations" value="9" checked>Gen 9</label></li>
-				</ul>
-			</div>
-		</div>
-
 		<label><input type="checkbox" id="natures" name="natures" value="true">Natures</label>
 		<label><input type="checkbox" id="genders" name="genders" value="true">Genders</label>
-		<label title="Only generate legendary/mythical/sub-legendary/paradox/ultra beast Pokémon."><input type="checkbox" id="legendsOnly" name="legendsOnly" value="true">Legends only</label>
-		<label title="Generate and display a random ability for each Pokémon."><input type="checkbox" id="abilities" name="abilities" value="true">Abilities</label>
-		<label title="Generate and display a random buff for each Pokémon."><input type="checkbox" id="buffs" name="buffs" value="true">Buffs</label>
-
-		<label title="Hide generated Pokémon behind Pokéballs until you click to reveal."><input type="checkbox" id="mystery" name="mystery" value="true">Mystery</label>
-		<label title="Generate an extra Fusion Pokémon that mixes attributes from the generated list."><input type="checkbox" id="fusion" name="fusion" value="true">Fusion</label>
-
-		<label title="Boost shiny odds (applies when sprites are enabled).">
-			Shiny odds
-			<select name="shinyOdds" id="shinyOdds" required>
-				<option value="16" selected>Normal (1/4096)</option>
-				<option value="64">Boosted (1/1024)</option>
-				<option value="256">High (1/256)</option>
-			</select>
-		</label>
-
-		<label title="Prefer special or physical attackers (requires Showdown data fetch).">
-			Attacker
-			<select name="attacker" id="attacker" required>
-				<option value="any" selected>Any</option>
-				<option value="physical">Physical (Atk ≥ SpA)</option>
-				<option value="special">Special (SpA &gt; Atk)</option>
-			</select>
-		</label>
-
-		<div class="dropdown" id="stats">
-			<button type="button" data-all-name="Stats">Stats</button>
-			<div class="popup">
-				<ul>
-					<li class="statRow"><label>Min HP <input type="number" id="minHp" name="minHp" min="0" max="255" placeholder="0" /></label></li>
-					<li class="statRow"><label>Min Atk <input type="number" id="minAtk" name="minAtk" min="0" max="255" placeholder="0" /></label></li>
-					<li class="statRow"><label>Min Def <input type="number" id="minDef" name="minDef" min="0" max="255" placeholder="0" /></label></li>
-					<li class="statRow"><label>Min SpA <input type="number" id="minSpA" name="minSpA" min="0" max="255" placeholder="0" /></label></li>
-					<li class="statRow"><label>Min SpD <input type="number" id="minSpD" name="minSpD" min="0" max="255" placeholder="0" /></label></li>
-					<li class="statRow"><label>Min Spe <input type="number" id="minSpe" name="minSpe" min="0" max="255" placeholder="0" /></label></li>
-				</ul>
-			</div>
-		</div>
 
 		<div class="dropdown" id="formsDropdown">
 			<button type="button" data-plural-name="Forms" data-allow-showing-two="true" data-allow-none="true">Forms</button>
