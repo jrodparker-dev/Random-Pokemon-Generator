@@ -60,6 +60,23 @@ button.text{background:transparent;color:inherit;border:0;padding:0}
 #results img,#shinies img{position:absolute;bottom:3em;left:50%;transform:translateX(-50%)}
 #results li.imageless{font-weight:700;margin:2em 0;height:auto;padding:0}
 
+/* Ability/Buff block */
+.textBlock{display:inline-block;vertical-align:top;max-width:100%}
+.textBlock .mainLine{display:block}
+.subline{font-size:.85em;opacity:.9;margin-top:2px}
+.subline .label{opacity:.75;margin-right:6px}
+.subline.subtle{opacity:.7}
+
+/* Mystery mode */
+#results li.mystery{position:relative}
+#results li.mystery:not(.revealed) .pokeContent{visibility:hidden}
+#results li.mystery .mysteryCover{position:absolute;top:50%;left:50%;transform:translate(-50%,-70%);
+	font-size:2em;line-height:1;cursor:pointer;user-select:none;z-index:50}
+#results li.mystery.revealed .mysteryCover{display:none}
+
+/* Stats dropdown inputs */
+.statRow input[type="number"]{width:4.5em;margin-left:.5em}
+
 #shiny-toggler{margin-bottom:.5em}
 #shinies{margin-top:1em}
 #shinies li{width:30%}

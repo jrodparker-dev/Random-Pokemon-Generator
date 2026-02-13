@@ -27,6 +27,26 @@ const displayDropdown = document.getElementById("display") as HTMLSelectElement;
 const naturesCheckbox = document.getElementById("natures") as HTMLInputElement;
 const gendersCheckbox = document.getElementById("genders") as HTMLInputElement;
 
+const generationsDropdown = document.getElementById("generations") as HTMLInputElement;
+const generationCheckboxes: HTMLInputElement[] = Array.from(generationsDropdown.querySelectorAll("input[name='generations']"));
+
+const legendsOnlyCheckbox = document.getElementById("legendsOnly") as HTMLInputElement;
+const abilitiesCheckbox = document.getElementById("abilities") as HTMLInputElement;
+const buffsCheckbox = document.getElementById("buffs") as HTMLInputElement;
+
+const mysteryCheckbox = document.getElementById("mystery") as HTMLInputElement;
+const fusionCheckbox = document.getElementById("fusion") as HTMLInputElement;
+
+const shinyOddsDropdown = document.getElementById("shinyOdds") as HTMLSelectElement;
+const attackerDropdown = document.getElementById("attacker") as HTMLSelectElement;
+
+const minHpInput = document.getElementById("minHp") as HTMLInputElement;
+const minAtkInput = document.getElementById("minAtk") as HTMLInputElement;
+const minDefInput = document.getElementById("minDef") as HTMLInputElement;
+const minSpAInput = document.getElementById("minSpA") as HTMLInputElement;
+const minSpDInput = document.getElementById("minSpD") as HTMLInputElement;
+const minSpeInput = document.getElementById("minSpe") as HTMLInputElement;
+
 const formsDropdown = document.getElementById("formsDropdown") as HTMLInputElement;
 const formsCheckbox = document.getElementById("forms") as HTMLInputElement;
 const megasCheckbox = document.getElementById("megas") as HTMLInputElement;
@@ -55,6 +75,29 @@ type Options = {
 	megas: boolean;
 	/** Whether to include gigantamax forms. Ignored if forms is false. */
 	gigantamaxes: boolean;
+	/** Restrict to a subset of generations. Empty means all generations. */
+	generations: number[];
+	/** Only generate legendary-family Pokémon (legendary, mythical, sub-legendary, paradox, ultra beast). */
+	legendsOnly: boolean;
+	/** Whether to generate/display a random ability for each Pokémon. */
+	abilities: boolean;
+	/** Whether to generate/display a random buff for each Pokémon. */
+	buffs: boolean;
+	/** Hide results behind Pokéballs until revealed. */
+	mystery: boolean;
+	/** Generate an extra fusion result. */
+	fusion: boolean;
+	/** Shiny roll threshold out of 65536. */
+	shinyOdds: number;
+	/** Attacker preference. */
+	attacker: "any" | "physical" | "special";
+	/** Minimum stat filters (0 means no filter). */
+	minHp: number;
+	minAtk: number;
+	minDef: number;
+	minSpA: number;
+	minSpD: number;
+	minSpe: number;
 	generate?: boolean;
 }
 
@@ -77,8 +120,28 @@ function getOptionsFromForm(): Options {
 		genders: gendersCheckbox.checked,
 		forms: formsCheckbox.checked,
 		megas: megasCheckbox.checked,
-		gigantamaxes: gigantamaxesCheckbox.checked
+		gigantamaxes: gigantamaxesCheckbox.checked,
+		generations: getSelectedGenerations(),
+		legendsOnly: legendsOnlyCheckbox.checked,
+		abilities: abilitiesCheckbox.checked,
+		buffs: buffsCheckbox.checked,
+		mystery: mysteryCheckbox.checked,
+		fusion: fusionCheckbox.checked,
+		shinyOdds: parseInt(shinyOddsDropdown.value),
+		attacker: attackerDropdown.value as any,
+		minHp: parseInt(minHpInput.value || "0"),
+		minAtk: parseInt(minAtkInput.value || "0"),
+		minDef: parseInt(minDefInput.value || "0"),
+		minSpA: parseInt(minSpAInput.value || "0"),
+		minSpD: parseInt(minSpDInput.value || "0"),
+		minSpe: parseInt(minSpeInput.value || "0"),
 	};
+}
+
+function getSelectedGenerations(): number[] {
+	return generationCheckboxes
+			.filter(checkbox => checkbox.checked)
+			.map(checkbox => parseInt(checkbox.value));
 }
 
 function getEvolutionCounts(): number[] {
@@ -162,6 +225,39 @@ function setOptions(options: Partial<Options>) {
 	if (options.genders != null) {
 		gendersCheckbox.checked = options.genders;
 	}
+	if (options.generations != null) {
+		const gens = new Set(options.generations);
+		generationCheckboxes.forEach(checkbox => {
+			checkbox.checked = gens.has(parseInt(checkbox.value)) || options.generations.length == 0;
+		});
+	}
+	if (options.legendsOnly != null) {
+		legendsOnlyCheckbox.checked = options.legendsOnly;
+	}
+	if (options.abilities != null) {
+		abilitiesCheckbox.checked = options.abilities;
+	}
+	if (options.buffs != null) {
+		buffsCheckbox.checked = options.buffs;
+	}
+	if (options.mystery != null) {
+		mysteryCheckbox.checked = options.mystery;
+	}
+	if (options.fusion != null) {
+		fusionCheckbox.checked = options.fusion;
+	}
+	if (options.shinyOdds != null) {
+		setDropdownIfValid(shinyOddsDropdown, options.shinyOdds);
+	}
+	if (options.attacker != null) {
+		setDropdownIfValid(attackerDropdown, options.attacker);
+	}
+	if (options.minHp != null) minHpInput.value = String(options.minHp || "");
+	if (options.minAtk != null) minAtkInput.value = String(options.minAtk || "");
+	if (options.minDef != null) minDefInput.value = String(options.minDef || "");
+	if (options.minSpA != null) minSpAInput.value = String(options.minSpA || "");
+	if (options.minSpD != null) minSpDInput.value = String(options.minSpD || "");
+	if (options.minSpe != null) minSpeInput.value = String(options.minSpe || "");
 	if (options.forms != null) {
 		formsCheckbox.checked = options.forms;
 	}
@@ -263,6 +359,39 @@ function convertUrlParamsToOptions(): Partial<Options> {
 	if (params.has("genders")) {
 		options.genders = parseBoolean(params.get("genders"));
 	}
+	if (params.has("generations")) {
+		options.generations = params.get("generations")
+			.split(",")
+			.filter(x => x.length)
+			.map(g => parseInt(g));
+	}
+	if (params.has("legendsOnly")) {
+		options.legendsOnly = parseBoolean(params.get("legendsOnly"));
+	}
+	if (params.has("abilities")) {
+		options.abilities = parseBoolean(params.get("abilities"));
+	}
+	if (params.has("buffs")) {
+		options.buffs = parseBoolean(params.get("buffs"));
+	}
+	if (params.has("mystery")) {
+		options.mystery = parseBoolean(params.get("mystery"));
+	}
+	if (params.has("fusion")) {
+		options.fusion = parseBoolean(params.get("fusion"));
+	}
+	if (params.has("shinyOdds")) {
+		options.shinyOdds = parseInt(params.get("shinyOdds"));
+	}
+	if (params.has("attacker")) {
+		options.attacker = params.get("attacker") as any;
+	}
+	if (params.has("minHp")) options.minHp = parseInt(params.get("minHp"));
+	if (params.has("minAtk")) options.minAtk = parseInt(params.get("minAtk"));
+	if (params.has("minDef")) options.minDef = parseInt(params.get("minDef"));
+	if (params.has("minSpA")) options.minSpA = parseInt(params.get("minSpA"));
+	if (params.has("minSpD")) options.minSpD = parseInt(params.get("minSpD"));
+	if (params.has("minSpe")) options.minSpe = parseInt(params.get("minSpe"));
 	if (params.has("forms")) {
 		options.forms = parseBoolean(params.get("forms"));
 	}
@@ -286,7 +415,8 @@ function convertOptionsToUrlParams(options: Partial<Options>): string {
 			if (Array.isArray(value)) {
 				if (value.length == 0
 					|| (key == "types" && value.length == typeCheckboxes.length)
-					|| (key == "regions" && value.length == regionCheckboxes.length)) {
+					|| (key == "regions" && value.length == regionCheckboxes.length)
+					|| (key == "generations" && value.length == generationCheckboxes.length)) {
 					// If all types or regions are selected, store it as "all" for a shorter URL.
 					encodableValue = "all";
 				} else {
@@ -355,14 +485,14 @@ function selectAll(event: Event) {
 	}
 	const selectAll = event.target.checked;
 	const container = event.target.closest(".popup");
-	container.querySelectorAll("input[type='checkbox']:not([data-select-all]")
+	container.querySelectorAll("input[type='checkbox']:not([data-select-all])")
 		.forEach((checkbox: HTMLInputElement) => checkbox.checked = selectAll);
 }
 
 function updateDropdownTitle(dropdownContainer: HTMLElement) {
 	const button = dropdownContainer.querySelector("button");
 	const selectAllCheckbox: HTMLInputElement = dropdownContainer.querySelector("input[type='checkbox'][data-select-all='true']");
-	const allCheckboxes: HTMLInputElement[] = Array.from(dropdownContainer.querySelectorAll("input[type='checkbox']:not([data-select-all]"));
+	const allCheckboxes: HTMLInputElement[] = Array.from(dropdownContainer.querySelectorAll("input[type='checkbox']:not([data-select-all])"));
 	const selectedCheckboxes: HTMLInputElement[] = allCheckboxes.filter(checkbox => checkbox.checked && !checkbox.disabled);
 	const allAreSelected = selectedCheckboxes.length == allCheckboxes.length;
 	const allowNoSelection = !!button.dataset.allowNone;
