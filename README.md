@@ -1,10 +1,52 @@
-# Random Pokémon Generator
-This is the source code for [randompokemon.com](https://randompokemon.com). To set it up in your own environment, follow the steps below:
+# Random Pokémon Generator (Vite + React)
 
-1. Clone the repository.
-2. Install [Node.js](https://nodejs.org) if you haven't already.
-3. Run `npm install` to download the development dependencies.
-4. Run `npm run dev` or `make dev` to run the TypeScript compiler and a development server.
-5. Open http://localhost:8000 in a web browser.
+This project has been migrated to a Vite + React app and is set up to publish a built version to `docs/` for GitHub Pages.
 
-Also see [Blackstareye/Random-Pokemon-Generator](https://github.com/Blackstareye/Random-Pokemon-Generator) for a fork with an API powered by a NodeJS back end.
+## Run locally
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start dev server:
+   ```bash
+   npm run dev
+   ```
+
+## Build
+
+```bash
+npm run build
+```
+
+Build artifacts are generated in `dist/`.
+
+## Publish via GitHub Pages from `/docs`
+
+Copy the latest build output into `docs/`:
+
+```bash
+rm -rf docs
+cp -r dist docs
+```
+
+Then commit and push to GitHub. In repo settings, configure GitHub Pages to serve from the `docs/` folder on your default branch.
+
+## Data structure (for customization)
+
+The data layer is isolated in:
+
+- `src/data/pokemonData.ts`
+
+Key points:
+
+- Static dex JSON files are loaded from `public/dex/*.json`.
+- Sprite images are loaded from:
+  - `public/sprites/normal/*.webp`
+  - `public/sprites/shiny/*.webp`
+- Region and type option lists are centralized in `src/data/pokemonData.ts`.
+
+To add/edit data later, you usually modify:
+
+- Existing dex files in `public/dex/`
+- Or add a new dex file and include it in `REGIONS` in `src/data/pokemonData.ts`
